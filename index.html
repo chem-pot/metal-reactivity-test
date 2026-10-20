@@ -64,7 +64,11 @@ button:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 .goal b{font-family:'Noto Sans KR',sans-serif;font-weight:800;flex:0 0 auto}
 
 /* 반응성 순서 */
-.series-card{flex:0 0 auto;background:var(--panel);border-radius:20px;padding:10px 16px 12px}
+.series-card{position:relative;flex:0 0 auto;background:var(--panel);border-radius:20px;padding:10px 16px 12px}
+.nohint-msg{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:10px;font-family:'Noto Serif KR',serif;font-weight:600;font-size:clamp(16px,1.6vw,20px);color:var(--muted)}
+.nohint-msg b{font-family:'Noto Sans KR',sans-serif;font-weight:800;color:var(--paper);background:var(--num);border-radius:999px;padding:3px 12px;font-size:.8em}
+.series-card.nohint > *:not(.nohint-msg){visibility:hidden}
+.series-card.nohint .nohint-msg{display:flex}
 .series-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
 .series-head h2{margin:0;font-size:15px;font-weight:800}
 .legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted)}
@@ -176,7 +180,8 @@ button:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
     <p class="goal"><b>목표</b><span>금속의 반응성 순서를 이용하여 금속과 금속 염 수용액의 반응 여부를 예상할 수 있다.</span></p>
   </div>
 
-  <section class="series-card">
+  <section class="series-card" id="seriesCard">
+    <div class="nohint-msg"><b>힌트 없음</b>금속의 반응성 순서를 떠올려 보자.</div>
     <div class="series-head">
       <h2>금속의 반응성 순서</h2>
       <div class="legend"><span><i style="border-color:var(--mint-deep)"></i>금속판</span><span><i style="border-color:var(--salmon)"></i>수용액 속 양이온</span></div>
@@ -223,9 +228,10 @@ button:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 'use strict';
 /* ===== 교사용 설정값 ===== */
 const CFG = {
-  dipSec: 0.9,       // 금속판을 넣는 데 걸리는 시간(초)
-  reactSec: 6,       // 반응이 끝까지 진행되는 모습을 보여 주는 시간(초)
-  noReactSec: 3.5,   // 반응하지 않을 때 지켜보는 시간(초)
+  dipSec: 0.6,       // 금속판을 넣는 데 걸리는 시간(초)
+  reactSec: 3,       // 반응이 끝까지 진행되는 모습을 보여 주는 시간(초)
+  noReactSec: 2,     // 반응하지 않을 때 지켜보는 시간(초)
+  noHintLast: 2,     // 마지막 몇 문제에서 반응성 순서 힌트를 가릴지(0이면 항상 보임)
   depositMax: 1.0,   // 금속판에 석출되는 금속의 최대 양(0~1)
   bubbleRate: 26,    // 묽은 황산과 반응할 때 1초에 생기는 기포 수
   shuffle: false,    // true면 문제 순서를 섞는다
@@ -361,6 +367,8 @@ function loadQuestion(i){
   nextBtn.classList.remove('ready'); nextBtn.textContent = i === Q.length - 1 ? '결과 보기' : '다음 문제';
   $('replayBtn').disabled = true;
   setProgress(i / Q.length);
+  const noHint = i >= Q.length - CFG.noHintLast;
+  $('seriesCard').classList.toggle('nohint', noHint);
   markSeries(q.m, sol.ion);
   /* 장면 준비 */
   L.stripBody.setAttribute('fill', `url(#g${q.m})`); L.stripBody.setAttribute('stroke', M.stroke);
@@ -489,6 +497,7 @@ function showSummary(){
   });
   $('stbl').innerHTML = h + '</tbody>';
   $('summary').classList.add('open');
+  $('seriesCard').classList.remove('nohint');
   markSeries(null, null);
   if (S.score / Q.length >= CFG.clapRate) cheer();
 }
