@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>금속과 금속 염 수용액의 반응 퀴즈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700&family=STIX+Two+Text:ital,wght@0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mint:#5dc2b0; --mint-deep:#23907f; --mint-soft:#e3f5f1;
+  --yellow:#f4c33b; --salmon:#e9966b; --num:#e8843a;
+  --ink:#231f20; --muted:#646b6c; --line:#d9dddc;
+  --paper:#fff; --panel:#f5f8f7; --stage:#fcfdfd;
+  --gray-tag:#98a2a2; --wrong:#d9614a; --wrong-soft:#fbe9e4;
+  --ball:#e9eeee; --ball-h:#fbe3ee;
+  --plate-top:#f2f7f8; --plate-stroke:#bfccd0;
+  --well-back:#e7eff1; --well-floor:#dbe6e9; --well-front:rgba(255,255,255,.30); --rim:#a9b8bc;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --mint-soft:#1d3833; --ink:#e8edec; --muted:#a2acab; --line:#38423f;
+    --paper:#121817; --panel:#1b2322; --stage:#161e1d; --wrong-soft:#3a231d;
+    --ball:#26302f; --ball-h:#3a2633;
+    --plate-top:#25302f; --plate-stroke:#4a5856;
+    --well-back:#1f2928; --well-floor:#1a2322; --well-front:rgba(255,255,255,.06); --rim:#617170;
+  }
+}
+:root[data-theme="dark"]{
+  --mint-soft:#1d3833; --ink:#e8edec; --muted:#a2acab; --line:#38423f;
+  --paper:#121817; --panel:#1b2322; --stage:#161e1d; --wrong-soft:#3a231d;
+  --ball:#26302f; --ball-h:#3a2633;
+  --plate-top:#25302f; --plate-stroke:#4a5856;
+  --well-back:#1f2928; --well-floor:#1a2322; --well-front:rgba(255,255,255,.06); --rim:#617170;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font-family:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
+button:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.ch{white-space:nowrap}
+.ch i{font-family:'STIX Two Text','Times New Roman',serif;font-style:italic}
+.ch sub,.ch sup{font-size:.72em;line-height:0}
+
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column;gap:10px;
+  padding:calc(12px + env(safe-area-inset-top,0px)) 18px calc(14px + env(safe-area-inset-bottom,0px))}
+
+/* 상단 */
+.top{display:flex;align-items:center;flex:0 0 auto}
+.badges{display:flex;align-items:center}
+.badge{border-radius:50%;display:grid;place-items:center;font-weight:800;flex:0 0 auto}
+.b1{width:62px;height:62px;background:var(--mint);color:#fff;font-size:15px}
+.b2{width:48px;height:48px;background:var(--yellow);color:#231f20;font-size:13px;margin-left:-6px}
+.dotline{flex:0 0 80px;height:0;border-top:4px dotted var(--mint);margin:0 12px}
+.prog{flex:1 1 auto;position:relative;height:18px;display:flex;align-items:center}
+.prog-track{position:relative;width:100%;height:7px;border-radius:4px;background:var(--mint-soft)}
+.prog-fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:4px;background:var(--mint);transition:width .5s}
+.prog-knob{position:absolute;top:50%;left:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:var(--mint-deep);border:3px solid var(--paper);box-shadow:0 0 0 2px var(--mint);transition:left .5s}
+.prog-end{flex:0 0 70px;height:7px;border-radius:4px;background:var(--mint);margin-left:16px}
+
+.titlebox h1{font-size:clamp(20px,2.1vw,28px);font-weight:800;margin:0 0 4px;letter-spacing:-.01em}
+.goal{margin:0;display:flex;gap:12px;font-family:'Noto Serif KR',serif;font-weight:600;font-size:15px;line-height:1.5}
+.goal b{font-family:'Noto Sans KR',sans-serif;font-weight:800;flex:0 0 auto}
+
+/* 반응성 순서 */
+.series-card{flex:0 0 auto;background:var(--panel);border-radius:20px;padding:10px 16px 12px}
+.series-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.series-head h2{margin:0;font-size:15px;font-weight:800}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:50%;border:3px solid;vertical-align:-2px;margin-right:4px}
+.series{display:flex;justify-content:space-between;gap:2px;overflow-x:auto;padding:4px 6px 8px}
+.el{display:flex;flex-direction:column;align-items:center;min-width:44px;flex:1 0 44px}
+.kn{font-size:11px;color:var(--muted);height:16px;margin-bottom:6px;white-space:nowrap}
+.ball{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:'STIX Two Text',Georgia,serif;font-weight:600;font-size:17px;background:var(--ball);color:var(--ink);transition:box-shadow .25s,transform .25s}
+.el.h .ball{background:var(--ball-h)}
+.el.selM .ball{box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--mint-deep)}
+.el.selI .ball{box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--salmon)}
+.trend{position:relative;height:24px;margin:6px 4px 0;background:linear-gradient(90deg,var(--mint-deep),var(--mint-soft));clip-path:polygon(0 50%,14px 0,100% 0,100% 100%,14px 100%);display:flex;justify-content:space-between;align-items:center;padding:0 14px 0 24px;font-size:12.5px;font-weight:700;color:#fff}
+.trend span:last-child{color:var(--mint-deep)}
+
+/* 본문 */
+.body{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1fr 380px;gap:16px}
+.stage{position:relative;min-height:260px;border-radius:22px;background:var(--stage);border:1px solid var(--line);overflow:hidden}
+#svg{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-select:none}
+.sbtns{position:absolute;display:flex;gap:8px;z-index:3}
+.sbtns.bl{left:12px;bottom:12px}
+.pill{min-height:48px;padding:0 20px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font-size:15px;font-weight:700;cursor:pointer}
+.pill:disabled{opacity:.4;cursor:default}
+.status{position:absolute;top:14px;left:50%;transform:translateX(-50%);padding:9px 18px;border-radius:999px;background:var(--ink);color:var(--paper);font-size:14.5px;font-weight:500;white-space:nowrap;opacity:0;transition:opacity .25s;z-index:4;pointer-events:none}
+.status.show{opacity:.92}
+
+.qpanel{background:var(--panel);border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto}
+.qhead{display:flex;align-items:center;gap:10px}
+.tag{display:inline-block;padding:4px 13px;border-radius:999px;background:var(--salmon);color:#fff;font-size:13px;font-weight:700}
+.count{color:var(--muted);font-size:14px}
+.count b{color:var(--ink)}
+.score{margin-left:auto;font-size:14px;color:var(--muted)}
+.score b{color:var(--mint-deep);font-size:17px}
+.qtext{margin:0;font-family:'Noto Serif KR',serif;font-weight:600;font-size:clamp(18px,1.8vw,23px);line-height:1.55}
+.qtext .m{color:var(--mint-deep)}
+.qtext .s{color:#c46d3f}
+.ans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.abtn{min-height:64px;border-radius:16px;border:2px solid var(--line);background:var(--paper);color:var(--ink);font-size:17px;font-weight:800;cursor:pointer;transition:background .2s,border-color .2s,opacity .2s}
+.abtn:hover:not(:disabled){border-color:var(--mint)}
+.abtn.picked{border-color:var(--mint-deep);background:var(--mint-soft);color:var(--mint-deep)}
+.abtn:disabled{cursor:default}
+.abtn:disabled:not(.picked){opacity:.45}
+.result{border-radius:16px;padding:12px 14px;background:var(--paper);border:1px solid var(--line);display:none}
+.result.show{display:block;animation:rise .35s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.verdict{font-size:20px;font-weight:800}
+.verdict.ok{color:var(--mint-deep)}
+.verdict.no{color:var(--wrong)}
+.rbadge{padding:4px 12px;border-radius:999px;font-size:13.5px;font-weight:700;background:var(--mint-soft);color:var(--mint-deep)}
+.rbadge.none{background:var(--line);color:var(--muted)}
+.obs{margin:8px 0 0;font-family:'Noto Serif KR',serif;font-weight:600;font-size:15.5px;line-height:1.55}
+.qfoot{display:flex;gap:8px;margin-top:auto}
+.next{flex:1;min-height:52px;border-radius:999px;border:none;background:var(--line);color:var(--muted);font-size:16px;font-weight:800;cursor:pointer;transition:background .3s,color .3s}
+.next.ready{background:var(--mint);color:#fff;animation:blink .45s ease-in-out 2}
+@keyframes blink{50%{transform:scale(1.04);box-shadow:0 0 0 6px var(--mint-soft)}}
+
+/* 결과 요약 */
+.summary{position:absolute;inset:0;z-index:6;background:var(--paper);display:flex;flex-direction:column;transform:translateY(104%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.summary.open{transform:none}
+.sum-body{overflow:auto;padding:22px 26px}
+.sum-score{font-family:'Noto Serif KR',serif;font-weight:700;font-size:clamp(20px,2.2vw,28px);margin:0 0 14px}
+.sum-score b{color:var(--mint-deep);font-size:1.3em}
+.stbl{border-collapse:collapse;width:100%;font-size:15px}
+.stbl th,.stbl td{border:1px solid var(--line);padding:5px 10px;text-align:center}
+.stbl thead th{background:var(--mint-soft);font-weight:700}
+.stbl td.mk{font-size:18px;font-weight:800}
+.stbl td.mk.ok{color:var(--mint-deep)}
+.stbl td.mk.no{color:var(--wrong);background:var(--wrong-soft)}
+.sum-foot{margin-top:16px;display:flex;justify-content:flex-end}
+
+.cheer{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden}
+.cheer .clap{position:absolute;left:50%;top:46%;font-size:min(22vh,150px);line-height:1;transform:translate(-50%,-50%);animation:clap .38s ease-in-out 5,fadeout .5s ease-in 1.9s forwards}
+.cheer i{position:absolute;top:-16px;width:10px;height:16px;border-radius:2px;animation:fall linear forwards}
+@keyframes clap{0%,100%{transform:translate(-50%,-50%) scale(1) rotate(0)}50%{transform:translate(-50%,-50%) scale(1.18) rotate(-8deg)}}
+@keyframes fadeout{to{opacity:0}}
+@keyframes fall{to{top:105%;opacity:.2}}
+
+/* SVG */
+.plate-top{fill:var(--plate-top);stroke:var(--plate-stroke);stroke-width:2.5}
+.well-back{fill:var(--well-back);stroke:var(--plate-stroke);stroke-width:2}
+.well-floor{fill:var(--well-floor)}
+.well-front{fill:var(--well-front);pointer-events:none}
+.well-rim{fill:none;stroke:var(--rim);stroke-width:2.5}
+.lbl{fill:var(--ink);font-size:30px;font-weight:700}
+.lbl-f{fill:var(--ink);font-size:34px;font-family:'STIX Two Text',serif;font-weight:600}
+
+@media (max-width:900px), (orientation:portrait){
+  .app{height:auto;min-height:100dvh}
+  .body{grid-template-columns:1fr}
+  .stage{aspect-ratio:5/3;min-height:0}
+  .dotline,.prog-end{flex-basis:40px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="badges"><span class="badge b1">퀴즈</span><span class="badge b2">실험</span></div>
+    <div class="dotline"></div>
+    <div class="prog" aria-hidden="true"><div class="prog-track"><div class="prog-fill" id="progFill"></div><div class="prog-knob" id="progKnob"></div></div></div>
+    <div class="prog-end"></div>
+  </header>
+
+  <div class="titlebox">
+    <h1>금속과 금속 염 수용액, 반응할까?</h1>
+    <p class="goal"><b>목표</b><span>금속의 반응성 순서를 이용하여 금속과 금속 염 수용액의 반응 여부를 예상할 수 있다.</span></p>
+  </div>
+
+  <section class="series-card">
+    <div class="series-head">
+      <h2>금속의 반응성 순서</h2>
+      <div class="legend"><span><i style="border-color:var(--mint-deep)"></i>금속판</span><span><i style="border-color:var(--salmon)"></i>수용액 속 양이온</span></div>
+    </div>
+    <div class="series" id="series"></div>
+    <div class="trend"><span>← 반응성이 크다</span><span>작다</span></div>
+  </section>
+
+  <div class="body">
+    <div class="stage" id="stage">
+      <svg id="svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" role="img" aria-label="실험 모습"></svg>
+      <div class="status" id="status"></div>
+      <div class="sbtns bl"><button class="pill" id="replayBtn" disabled>다시 보기</button></div>
+      <div class="summary" id="summary">
+        <div class="sum-body">
+          <p class="sum-score" id="sumScore"></p>
+          <table class="stbl" id="stbl"></table>
+          <div class="sum-foot"><button class="pill" id="againBtn">처음부터 다시</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="qpanel">
+      <div class="qhead">
+        <span class="tag" id="qtag">문제 1</span>
+        <span class="count"><b id="qcur">1</b> / <span id="qtot">5</span></span>
+        <span class="score">맞힌 문제 <b id="scoreNum">0</b></span>
+      </div>
+      <p class="qtext" id="qtext"></p>
+      <div class="ans">
+        <button class="abtn" data-a="yes">반응한다</button>
+        <button class="abtn" data-a="no">반응하지 않는다</button>
+      </div>
+      <div class="result" id="result">
+        <div class="rhead"><span class="verdict" id="verdict"></span><span class="rbadge" id="rbadge"></span></div>
+        <p class="obs" id="obs"></p>
+      </div>
+      <div class="qfoot"><button class="next" id="nextBtn">다음 문제</button></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ===== 교사용 설정값 ===== */
+const CFG = {
+  dipSec: 0.9,       // 금속판을 넣는 데 걸리는 시간(초)
+  reactSec: 6,       // 반응이 끝까지 진행되는 모습을 보여 주는 시간(초)
+  noReactSec: 3.5,   // 반응하지 않을 때 지켜보는 시간(초)
+  depositMax: 1.0,   // 금속판에 석출되는 금속의 최대 양(0~1)
+  bubbleRate: 26,    // 묽은 황산과 반응할 때 1초에 생기는 기포 수
+  shuffle: false,    // true면 문제 순서를 섞는다
+  clapRate: 0.8,     // 이 비율 이상 맞히면 마지막에 박수(0~1)
+  clapSound: true    // 박수 소리(false면 그림만)
+};
+/* ===== 문제 목록: [금속판, 수용액] =====
+   금속판: Mg, Zn, Fe, Cu, Ag / 수용액: MgSO4, ZnSO4, FeSO4, CuSO4, AgNO3, H2SO4
+   정답은 반응성 순서로 자동 판정된다. 줄을 더하거나 빼서 문제를 바꿀 수 있다. */
+const QUIZ = [
+  ['Zn', 'CuSO4'],
+  ['Cu', 'FeSO4'],
+  ['Fe', 'CuSO4'],
+  ['Cu', 'H2SO4'],
+  ['Zn', 'H2SO4']
+];
+
+/* ===== 자료 ===== */
+const SERIES = [['K','칼륨'],['Ca','칼슘'],['Na','나트륨'],['Mg','마그네슘'],['Al','알루미늄'],['Zn','아연'],['Fe','철'],['Ni','니켈'],['Sn','주석'],['Pb','납'],['H','(수소)'],['Cu','구리'],['Hg','수은'],['Ag','은'],['Pt','백금'],['Au','금']];
+const rank = s => SERIES.findIndex(e => e[0] === s);
+const METALS = {
+  Mg:{name:'마그네슘', g:['#f2f4f6','#c9ced3','#e6e9ec'], stroke:'#9aa1a7'},
+  Zn:{name:'아연',     g:['#d8dfe4','#9dabb3','#c9d2d8'], stroke:'#7b8890'},
+  Fe:{name:'철',       g:['#a9a39d','#6e6862','#9a948e'], stroke:'#4f4a45'},
+  Cu:{name:'구리',     g:['#f7b383','#c46a39','#e8925d'], stroke:'#a5582c'},
+  Ag:{name:'은',       g:['#f5f7f8','#c0c6ca','#e3e6e9'], stroke:'#959ca2'}
+};
+const SOLS = {
+  MgSO4:{name:'황산 마그네슘 수용액', ion:'Mg', f:[['MgSO'],['4','sub']], html:'MgSO<sub>4</sub>'},
+  ZnSO4:{name:'황산 아연 수용액',     ion:'Zn', f:[['ZnSO'],['4','sub']], html:'ZnSO<sub>4</sub>'},
+  FeSO4:{name:'황산 철(Ⅱ) 수용액',    ion:'Fe', f:[['FeSO'],['4','sub']], html:'FeSO<sub>4</sub>'},
+  CuSO4:{name:'황산 구리(Ⅱ) 수용액',  ion:'Cu', f:[['CuSO'],['4','sub']], html:'CuSO<sub>4</sub>'},
+  AgNO3:{name:'질산 은 수용액',       ion:'Ag', f:[['AgNO'],['3','sub']], html:'AgNO<sub>3</sub>'},
+  H2SO4:{name:'묽은 황산',            ion:'H',  f:[['H'],['2','sub'],['SO'],['4','sub']], html:'H<sub>2</sub>SO<sub>4</sub>'}
+};
+/* 수용액 속 이온의 색: Cu²⁺ 푸른색, Fe²⁺ 연한 녹색, 나머지 무색 */
+const BASE = [212,231,239];
+const TINT = {Cu:{rgb:[38,158,206], s:.88}, Fe:{rgb:[160,205,140], s:.6}};
+/* 석출물 모양: 실제 실험에서 보이는 모습 */
+const DEP = {
+  Cu:{coat:'#6a2c19', b:['#7d3720','#4b2215','#9b4b2b'], needles:0, desc:'붉은색'},
+  Ag:{coat:'#8f969b', b:['#c3c8cc','#9aa1a6','#e3e6e8'], needles:38, desc:'회백색'},
+  Fe:{coat:'#2c2a28', b:['#3a3633','#1f1d1b','#4a4541'], needles:0, desc:'검은색'},
+  Zn:{coat:'#54595d', b:['#3f4346','#6a6f73','#33373a'], needles:10, desc:'회색'}
+};
+
+/* ===== 장면 배치 ===== */
+const CX = 500, CY = 232, RX = 150, RY = 48, DEPTH = 250, LEVEL = 172;
+const FLOOR = CY + DEPTH, YS = FLOOR - LEVEL;
+const SW = 90, SL = 380, UP_Y = 188, DOWN_Y = FLOOR - 18;
+
+/* ===== 공통 ===== */
+const NS = 'http://www.w3.org/2000/svg';
+const $ = id => document.getElementById(id);
+const svg = $('svg'), stage = $('stage'), nextBtn = $('nextBtn');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function el(tag, attrs, parent){ const n = document.createElementNS(NS, tag); if (attrs) for (const k in attrs) if (attrs[k] != null) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; }
+function chem(parent, x, y, parts, attrs){
+  const t = el('text', Object.assign({x, y}, attrs || {}), parent); let sub = false;
+  parts.forEach(([s, k]) => { const a = {};
+    if (k === 'sub'){ a.dy = '0.42em'; a['font-size'] = '0.72em'; sub = true; } else if (sub){ a.dy = '-0.3em'; sub = false; }
+    if (k === 'i'){ a['font-style'] = 'italic'; a['font-weight'] = 400; }
+    el('tspan', a, t).textContent = s; });
+  return t;
+}
+function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+const rgba = (c, a) => `rgba(${c.map(v => Math.round(v)).join(',')},${a.toFixed(3)})`;
+const hasJong = w => { const c = w.charCodeAt(w.length - 1); return c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 !== 0; };
+function tween(dur, fn, done){
+  const t0 = performance.now();
+  if (reduced || dur <= 0){ fn(1); if (done) done(); return; }
+  (function f(now){ const k = clamp((now - t0) / dur, 0, 1); fn(1 - Math.pow(1 - k, 3)); if (k < 1) requestAnimationFrame(f); else if (done) done(); })(t0);
+}
+let statusT;
+function status(msg, keep){ const s = $('status'); s.textContent = msg; s.classList.add('show'); clearTimeout(statusT); if (!keep) statusT = setTimeout(() => s.classList.remove('show'), 2200); }
+function hideStatus(){ clearTimeout(statusT); $('status').classList.remove('show'); }
+const reacts = (m, sol) => { const n = SOLS[sol].ion; return m !== n && rank(m) < rank(n); };
+
+/* ===== 반응성 순서 ===== */
+$('series').innerHTML = SERIES.map(([s, n]) => `<div class="el${s === 'H' ? ' h' : ''}" data-s="${s}"><span class="kn">${n}</span><span class="ball">${s}</span></div>`).join('');
+function markSeries(m, ion){ document.querySelectorAll('.el').forEach(e => { e.classList.toggle('selM', e.dataset.s === m); e.classList.toggle('selI', e.dataset.s === ion); }); }
+
+/* ===== 장면 ===== */
+const L = {};
+function grad(d, id, c){ const g = el('linearGradient', {id, x1:0, y1:0, x2:1, y2:0}, d); [['0', c[0]], ['0.45', c[1]], ['1', c[2]]].forEach(([o, s]) => el('stop', {offset:o, 'stop-color':s}, g)); }
+function liqFront(ys){ const l = CX - RX + 1, r = CX + RX - 1; return `M${l},${ys} A${RX - 1},${RY - 1} 0 0 0 ${r},${ys} L${r},${FLOOR} A${RX - 1},${RY - 1} 0 0 1 ${l},${FLOOR} Z`; }
+function liqSil(ys){ const l = CX - RX + 1, r = CX + RX - 1; return `M${l},${ys} A${RX - 1},${RY - 1} 0 0 1 ${r},${ys} L${r},${FLOOR} A${RX - 1},${RY - 1} 0 0 1 ${l},${FLOOR} Z`; }
+function buildScene(){
+  svg.innerHTML = '';
+  const d = el('defs', null, svg);
+  Object.keys(METALS).forEach(k => grad(d, 'g' + k, METALS[k].g));
+  const cp = el('clipPath', {id:'liqClip'}, d); el('path', {d:`M${CX - RX + 1},${YS} L${CX + RX - 1},${YS} L${CX + RX - 1},${FLOOR} A${RX - 1},${RY - 1} 0 0 1 ${CX - RX + 1},${FLOOR} Z`}, cp);
+
+  el('rect', {x:250, y:130, width:500, height:520, rx:28, class:'plate-top'}, svg);
+  /* 홈 */
+  el('path', {d:`M${CX - RX},${CY} A${RX},${RY} 0 0 1 ${CX + RX},${CY} L${CX + RX},${FLOOR} A${RX},${RY} 0 0 1 ${CX - RX},${FLOOR} Z`, class:'well-back'}, svg);
+  el('ellipse', {cx:CX, cy:FLOOR, rx:RX, ry:RY, class:'well-floor'}, svg);
+  L.liq = el('path', {d:liqFront(YS)}, svg);
+  L.surf = el('ellipse', {cx:CX, cy:YS, rx:RX - 1, ry:RY - 1}, svg);
+  /* 금속판 */
+  L.strip = el('g', null, svg);
+  L.stripBody = el('rect', {x:-SW / 2, y:-SL, width:SW, height:SL, rx:4, 'stroke-width':2}, L.strip);
+  el('line', {x1:-SW / 2 + 18, y1:-SL + 14, x2:-SW / 2 + 18, y2:-14, stroke:'#fff', 'stroke-width':6, opacity:.45, 'stroke-linecap':'round'}, L.strip);
+  /* 석출물·기포(용액 안에만) */
+  L.tint = el('path', {d:liqFront(YS), 'pointer-events':'none'}, svg);
+  L.dep = el('g', {'clip-path':'url(#liqClip)'}, svg);
+  L.bub = el('g', {'clip-path':'url(#liqClip)'}, svg);
+  el('path', {d:`M${CX - RX},${CY} A${RX},${RY} 0 0 0 ${CX + RX},${CY} L${CX + RX},${FLOOR} A${RX},${RY} 0 0 1 ${CX - RX},${FLOOR} Z`, class:'well-front'}, svg);
+  el('ellipse', {cx:CX, cy:CY, rx:RX, ry:RY, class:'well-rim'}, svg);
+  /* 이름표 */
+  L.mLabel = el('text', {x:CX - SW / 2 - 22, y:120, 'text-anchor':'end', class:'lbl'}, svg);
+  L.sLabelG = el('g', null, svg);
+}
+
+/* ===== 문제 상태 ===== */
+let Q = [], S = {};
+function freshQuiz(){
+  Q = QUIZ.filter(([m, s]) => METALS[m] && SOLS[s] && m !== SOLS[s].ion).map(([m, s]) => ({m, s, ans:reacts(m, s), pick:null}));
+  if (CFG.shuffle) for (let i = Q.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [Q[i], Q[j]] = [Q[j], Q[i]]; }
+  S = {i:0, score:0};
+}
+function setProgress(f){ $('progFill').style.width = (f * 100) + '%'; $('progKnob').style.left = (f * 100) + '%'; }
+
+function loadQuestion(i){
+  const q = Q[i]; S.i = i; S.phase = 'ask'; S.t = 0; S.p = 0; S.bubbles = []; S.bubAcc = 0;
+  const M = METALS[q.m], sol = SOLS[q.s];
+  $('qtag').textContent = '문제 ' + (i + 1); $('qcur').textContent = i + 1; $('qtot').textContent = Q.length;
+  $('qtext').innerHTML = `<span class="m">${M.name}(${q.m})판</span>을 <span class="s">${sol.name}(<span class="ch">${sol.html}(<i>aq</i>)</span>)</span>에 넣으면 반응이 일어날까?`;
+  document.querySelectorAll('.abtn').forEach(b => { b.disabled = false; b.classList.remove('picked'); });
+  $('result').classList.remove('show');
+  nextBtn.classList.remove('ready'); nextBtn.textContent = i === Q.length - 1 ? '결과 보기' : '다음 문제';
+  $('replayBtn').disabled = true;
+  setProgress(i / Q.length);
+  markSeries(q.m, sol.ion);
+  /* 장면 준비 */
+  L.stripBody.setAttribute('fill', `url(#g${q.m})`); L.stripBody.setAttribute('stroke', M.stroke);
+  L.mLabel.textContent = `${M.name}(${q.m})판`;
+  L.sLabelG.innerHTML = ''; chem(L.sLabelG, CX + RX + 26, YS + 90, sol.f.concat([['('], ['aq', 'i'], [')']]), {class:'lbl-f'});
+  S.stripY = UP_Y; setStrip();
+  makeDeposit(q);
+  drawLiquid();
+  hideStatus();
+}
+function setStrip(){ L.strip.setAttribute('transform', `translate(${CX},${S.stripY.toFixed(1)})`); }
+function liquidColor(){
+  const q = Q[S.i], N = SOLS[q.s].ion, r = q.ans && S.phase !== 'ask';
+  const p = r ? S.p : 0;
+  let c = BASE.slice(), a = .42;
+  if (TINT[N]){ const s = TINT[N].s * (1 - .45 * p); c = mix(c, TINT[N].rgb, s); a += .4 * s; }
+  if (r && TINT[q.m]){ const s = TINT[q.m].s * .55 * p; c = mix(c, TINT[q.m].rgb, s); a += .35 * s; }
+  return {c, a:Math.min(a, .85)};
+}
+function drawLiquid(){
+  const {c, a} = liquidColor();
+  L.liq.setAttribute('fill', rgba(c, a));
+  L.surf.setAttribute('fill', rgba(mix(c, [255,255,255], .35), a * .85));
+  L.tint.setAttribute('fill', rgba(c, a * .5));
+}
+
+/* 석출물: 반응하는 경우에만, 금속판이 잠긴 부분에 생긴다 */
+function makeDeposit(q){
+  L.dep.innerHTML = ''; S.depData = null;
+  const N = SOLS[q.s].ion;
+  if (!q.ans || N === 'H' || !DEP[N]) return;
+  const D = DEP[N], rnd = mulberry32(rank(q.m) * 31 + rank(N) * 7 + 3);
+  const x0 = CX - SW / 2, x1 = CX + SW / 2, top = YS, bot = DOWN_Y;
+  const coat = el('rect', {x:x0 - 3, y:top, width:SW + 6, height:bot - top, rx:4, fill:D.coat, opacity:0}, L.dep);
+  const bumps = [];
+  for (let k = 0; k < 70; k++){
+    const x = rnd() < .5 ? (rnd() < .5 ? x0 : x1) + (rnd() * 10 - 5) : x0 + rnd() * SW;
+    bumps.push({n:el('circle', {cx:x.toFixed(1), cy:(top + rnd() * (bot - top)).toFixed(1), r:0, fill:D.b[k % 3], opacity:0}, L.dep), r:3 + rnd() * 6});
+  }
+  const needles = [];
+  for (let k = 0; k < D.needles; k++){
+    const side = rnd() < .5 ? -1 : 1, nx = side < 0 ? x0 + rnd() * 6 : x1 - rnd() * 6, ny = top + 10 + rnd() * (bot - top - 20);
+    let dx = side * (0.55 + rnd() * .6), dy = rnd() * 1 - .5; const n = Math.hypot(dx, dy); dx /= n; dy /= n;
+    const len = N === 'Ag' ? 30 + rnd() * 55 : 10 + rnd() * 14, tw = (rnd() < .5 ? -1 : 1) * (.55 + rnd() * .5);
+    const outer = el('path', {fill:'none', stroke:N === 'Ag' ? '#99a0a5' : '#3b3f42', 'stroke-width':N === 'Ag' ? 5 : 3.5, 'stroke-linecap':'round'}, L.dep);
+    const inner = el('path', {fill:'none', stroke:N === 'Ag' ? '#f1f3f4' : '#7c8185', 'stroke-width':1.6, 'stroke-linecap':'round'}, L.dep);
+    needles.push({outer, inner, x:nx, y:ny, dx, dy, len, tw});
+  }
+  S.depData = {coat, bumps, needles, N};
+}
+function drawDeposit(){
+  const d = S.depData; if (!d) return;
+  const p = S.p * CFG.depositMax;
+  d.coat.setAttribute('opacity', ((d.N === 'Ag' ? .5 : .9) * p).toFixed(3));
+  d.bumps.forEach(b => { b.n.setAttribute('r', (b.r * (.3 + .7 * p)).toFixed(2)); b.n.setAttribute('opacity', Math.min(1, p * 1.4).toFixed(2)); });
+  d.needles.forEach(nd => {
+    if (p < .03){ nd.outer.setAttribute('d', ''); nd.inner.setAttribute('d', ''); return; }
+    const l = nd.len * p, ex = nd.x + nd.dx * l, ey = nd.y + nd.dy * l, mx = nd.x + nd.dx * l * .55, my = nd.y + nd.dy * l * .55;
+    const c = Math.cos(nd.tw), s = Math.sin(nd.tw), tx = nd.dx * c - nd.dy * s, ty = nd.dx * s + nd.dy * c, tl = l * .42;
+    const dd = `M${nd.x.toFixed(1)},${nd.y.toFixed(1)} L${ex.toFixed(1)},${ey.toFixed(1)} M${mx.toFixed(1)},${my.toFixed(1)} l${(tx * tl).toFixed(1)},${(ty * tl).toFixed(1)}`;
+    nd.outer.setAttribute('d', dd); nd.inner.setAttribute('d', dd);
+  });
+}
+
+/* ===== 응답 ===== */
+document.querySelectorAll('.abtn').forEach(b => b.addEventListener('click', () => {
+  if (S.phase !== 'ask') return;
+  const q = Q[S.i]; q.pick = b.dataset.a === 'yes';
+  b.classList.add('picked'); document.querySelectorAll('.abtn').forEach(x => x.disabled = true);
+  if (q.pick === q.ans) S.score++;
+  runSim();
+}));
+function runSim(){
+  const q = Q[S.i];
+  S.phase = 'dip'; S.t = 0; S.p = 0; S.bubbles = []; L.bub.innerHTML = '';
+  makeDeposit(q); drawLiquid();
+  $('result').classList.remove('show'); $('replayBtn').disabled = true; nextBtn.classList.remove('ready');
+  status('금속판을 수용액에 넣는 중…', true);
+  S.stripY = UP_Y; setStrip();
+  tween(CFG.dipSec * 1000, k => { S.stripY = UP_Y + (DOWN_Y - UP_Y) * k; setStrip(); }, () => {
+    S.phase = 'react'; S.t = 0;
+    status('관찰하는 중…', true);
+  });
+}
+function showResult(){
+  const q = Q[S.i], M = METALS[q.m], N = SOLS[q.s].ion;
+  S.phase = 'done'; hideStatus();
+  const ok = q.pick === q.ans;
+  $('verdict').textContent = ok ? '정답이다!' : '아쉽다!';
+  $('verdict').className = 'verdict ' + (ok ? 'ok' : 'no');
+  $('rbadge').textContent = q.ans ? '반응한다' : '반응하지 않는다';
+  $('rbadge').className = 'rbadge' + (q.ans ? '' : ' none');
+  $('obs').textContent = observation(q);
+  $('result').classList.add('show');
+  $('scoreNum').textContent = S.score;
+  $('replayBtn').disabled = false;
+  nextBtn.classList.add('ready');
+  setProgress((S.i + 1) / Q.length);
+}
+function observation(q){
+  const M = METALS[q.m], N = SOLS[q.s].ion, plate = M.name + '판';
+  if (!q.ans) return '아무 변화가 나타나지 않았다.';
+  if (N === 'H') return `${plate} 표면에서 기포가 발생했다.`;
+  let s = `${plate} 표면에 ${DEP[N].desc} 물질이 생겼다`;
+  if (N === 'Cu' && q.m === 'Fe') s += '. 수용액의 푸른색이 옅어지고 연한 녹색을 띠었다.';
+  else if (N === 'Cu') s += '. 수용액의 푸른색이 옅어졌다.';
+  else if (N === 'Fe') s += '. 수용액의 연한 녹색이 옅어졌다.';
+  else if (q.m === 'Cu') s += '. 수용액이 점점 푸른색을 띠었다.';
+  else if (q.m === 'Fe') s += '. 수용액이 연한 녹색을 띠었다.';
+  else s += '.';
+  return s;
+}
+$('replayBtn').addEventListener('click', () => { if (S.phase === 'done') runSim(); });
+nextBtn.addEventListener('click', () => {
+  if (S.phase !== 'done'){ status(S.phase === 'ask' ? '먼저 답을 고르자.' : '실험을 끝까지 지켜보자.'); return; }
+  if (S.i < Q.length - 1) loadQuestion(S.i + 1); else showSummary();
+});
+
+/* ===== 결과 요약 ===== */
+function showSummary(){
+  $('sumScore').innerHTML = `${Q.length}문제 중 <b>${S.score}</b>문제를 맞혔다.`;
+  let h = '<thead><tr><th>번호</th><th>금속판</th><th>수용액</th><th>결과</th><th>채점</th></tr></thead><tbody>';
+  Q.forEach((q, i) => {
+    const ok = q.pick === q.ans;
+    h += `<tr><td>${i + 1}</td><td>${METALS[q.m].name}(${q.m})</td><td><span class="ch">${SOLS[q.s].html}(<i>aq</i>)</span></td><td>${q.ans ? '반응한다' : '반응하지 않는다'}</td><td class="mk ${ok ? 'ok' : 'no'}">${ok ? '○' : '×'}</td></tr>`;
+  });
+  $('stbl').innerHTML = h + '</tbody>';
+  $('summary').classList.add('open');
+  markSeries(null, null);
+  if (S.score / Q.length >= CFG.clapRate) cheer();
+}
+$('againBtn').addEventListener('click', start);
+function cheer(){
+  const box = document.createElement('div'); box.className = 'cheer';
+  box.innerHTML = '<div class="clap">👏</div>';
+  const cols = ['#5dc2b0','#f4c33b','#e9966b','#23907f'];
+  for (let i = 0; i < 40; i++){
+    const c = document.createElement('i');
+    c.style.left = (Math.random() * 100) + '%'; c.style.background = cols[i % 4];
+    c.style.animationDelay = (Math.random() * .5) + 's'; c.style.animationDuration = (1.4 + Math.random() * .9) + 's';
+    c.style.transform = `rotate(${Math.random() * 360}deg)`; box.appendChild(c);
+  }
+  stage.appendChild(box); setTimeout(() => box.remove(), 2800);
+  if (CFG.clapSound) clapSound();
+}
+function clapSound(){
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const ac = cheer.ac || (cheer.ac = new AC()); if (ac.state === 'suspended') ac.resume();
+    const len = Math.floor(ac.sampleRate * .08), buf = ac.createBuffer(1, len, ac.sampleRate), ch = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4);
+    const t0 = ac.currentTime + .02;
+    for (let i = 0; i < 46; i++){
+      const t = t0 + Math.random() * 1.7, src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = buf; f.type = 'bandpass'; f.frequency.value = 900 + Math.random() * 1600; f.Q.value = 1.2;
+      g.gain.value = .35 * (1 - (t - t0) / 2.2);
+      src.connect(f); f.connect(g); g.connect(ac.destination); src.start(t);
+    }
+  } catch(_){}
+}
+
+/* ===== 매 프레임 ===== */
+let last = performance.now();
+function tick(now){
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  const q = Q[S.i];
+  if (q && S.phase === 'react'){
+    S.t += dt;
+    if (q.ans){
+      const raw = clamp(S.t / CFG.reactSec, 0, 1); S.p = 1 - Math.pow(1 - raw, 1.6);
+      drawDeposit(); drawLiquid();
+      if (raw >= 1) showResult();
+    } else if (S.t >= CFG.noReactSec) showResult();
+  }
+  /* 묽은 황산: 기포 */
+  if (q && q.ans && SOLS[q.s].ion === 'H' && (S.phase === 'react' || S.phase === 'done')){
+    S.bubAcc += dt * CFG.bubbleRate;
+    while (S.bubAcc >= 1){
+      S.bubAcc -= 1;
+      const side = Math.random(), x = side < .35 ? CX - SW / 2 - 3 : side < .7 ? CX + SW / 2 + 3 : CX - SW / 2 + 8 + Math.random() * (SW - 16);
+      const b = {x, y:YS + 20 + Math.random() * (DOWN_Y - YS - 24), r:2.5 + Math.random() * 3.5, v:70 + Math.random() * 60, ph:Math.random() * 6};
+      b.n = el('circle', {r:b.r, fill:'rgba(255,255,255,.6)', stroke:'rgba(90,120,135,.7)', 'stroke-width':1.3}, L.bub);
+      S.bubbles.push(b);
+    }
+    S.bubbles.forEach(b => { b.y -= b.v * dt; b.ph += dt * 6; b.r = Math.min(b.r + dt * 1.5, 8); b.n.setAttribute('cx', (b.x + Math.sin(b.ph) * 2).toFixed(1)); b.n.setAttribute('cy', b.y.toFixed(1)); b.n.setAttribute('r', b.r.toFixed(1)); });
+    S.bubbles = S.bubbles.filter(b => { if (b.y < YS - 4){ b.n.remove(); return false; } return true; });
+  }
+  requestAnimationFrame(tick);
+}
+
+function start(){
+  $('summary').classList.remove('open');
+  freshQuiz(); $('scoreNum').textContent = 0;
+  buildScene();
+  loadQuestion(0);
+}
+start();
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
